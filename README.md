@@ -21,3 +21,5 @@ Ominaisuudet:
 -Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 
 -Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
+
++mahdollisesti lisään jotain mutta alkuun kuitenkin nämä.
