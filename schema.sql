@@ -3,4 +3,4 @@ CREATE TABLE cats (id SERIAL PRIMARY KEY, topic TEXT);
 INSERT INTO cats (topic) VALUES ('General');
 INSERT INTO cats (topic) VALUES ('Help');
 CREATE TABLE threads (id SERIAL PRIMARY KEY, topic TEXT, category_id INTEGER REFERENCES cats, created_at TIMESTAMP);
-CREATE TABLE messages (id SERIAL PRIMARY KEY, content TEXT, user_id INTEGER REFERENCES users, thread_id REFERENCES threads, sent_at TIMESTAMP )
+CREATE TABLE messages (id SERIAL PRIMARY KEY, content TEXT, user_id INTEGER REFERENCES users, thread_id INTEGER REFERENCES threads, sent_at TIMESTAMP );
