@@ -1,10 +1,10 @@
-## tsoha-keskustelusovellus
-#Tietokantasovellusprojekti
+# tsoha-keskustelusovellus
+Tietokantasovellusprojekti
 
 
 Lopputuloksena olisi Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
 
-#Ominaisuudet:
+## Ominaisuudet:
 
 * Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
 * Käyttäjä näkee sovelluksen etusivulla listan alueista sekä jokaisen alueen ketjujen ja viestien määrän ja viimeksi lähetetyn viestin ajankohdan.
@@ -16,7 +16,7 @@ Lopputuloksena olisi Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
 * Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
 * +mahdollisesti lisään jotain mutta alkuun kuitenkin nämä.
 
-##Tilanne:
+## Tilanne:
 
 * Sovelluksen pohja valmis.
 * Kirjautuminen ja rekisteröinti toimii, mutta niitä ei tarkasteta eikä niihin viitata vielä.
