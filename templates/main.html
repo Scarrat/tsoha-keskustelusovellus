@@ -1,6 +1,8 @@
-Categories: {{ count }}
+Number of categories: {{ count }}
 <hr>
-{% for category in categories %}
-<a href="/{{ category.topic }}">{{ category.topic }}</a>
+Logged in 
+<hr>
+{% for cat in cats %}
+<a href="main.html">{{ cat.topic }} </a> 
 <hr>
 {% endfor %}
