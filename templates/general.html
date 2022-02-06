@@ -1,8 +1,0 @@
-<a href="/new">New Thread</a>
-<hr>
-{% for thread in threads %}
-Topic: {{ thread.topic }} <br>
-Luotu: {{ thread.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
-<a href="/General/{{ thread.id }}">Go to thread</a> |
-<hr>
-{% endfor %}

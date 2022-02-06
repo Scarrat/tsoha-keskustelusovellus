@@ -1,6 +1,6 @@
 from app import app
 from flask import redirect, render_template, request, session
-import users
+import messages, users
 from db import db
 
 
@@ -37,6 +37,26 @@ def login():
 
 @app.route("/main")
 def main():
-    result = db.session.execute("SELECT topic FROM cats")
+    result = db.session.execute("SELECT id, topic FROM cats")
     cats = result.fetchall()
-    return render_template("main.html",count=len(cats), cats=cats)
+    return render_template("main.html",count=len(cats), cats=cats, id=id)
+
+@app.route("/threads/<int:id>")
+def threads(id):
+    result = db.session.execute("SELECT topic FROM cats WHERE id=:id",{"id":id})
+    topic = result.fetchone()[0]
+    result = db.session.execute("SELECT id, topic FROM threads where cat_id=:id", {"id":id})
+    threads = result.fetchall()
+    return render_template("threads.html", id=id, topic=topic, threads=threads)
+
+@app.route("/new", methods=["GET", "POST"])
+def new():
+    if request.method == "GET":
+        return render_template("new.html")
+    if request.method == "POST":
+        topic = request.form["topic"]
+        if messages.post_thread(topic):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Thread creation failed")
+

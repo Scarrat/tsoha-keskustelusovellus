@@ -3,6 +3,6 @@ Number of categories: {{ count }}
 Logged in 
 <hr>
 {% for cat in cats %}
-<a href="main.html">{{ cat.topic }} </a> 
+<a href="/threads/{{cat.id}}">{{ cat.topic }} </a> 
 <hr>
 {% endfor %}
