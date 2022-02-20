@@ -1,3 +1,4 @@
+{% if session.username %}
 {% if session.username== creator %}
 <form action="/editt" method="POST">
     {{topic}}
@@ -48,4 +49,6 @@ by {{ message.sender }} at {{message.sent_at.strftime("%H:%M %d-%m-%Y")}}
 {% endif %}
 <hr>
 {% endfor %}
+<a href="/main">Back to main page</a>
 <hr><a href="/logout">Log out</a>
+{% endif %}

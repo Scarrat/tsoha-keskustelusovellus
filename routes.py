@@ -17,7 +17,8 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        if users.register(username, password):
+        users.register(username, password)
+        if users.login(username,password):
             return redirect("/main")
         else:
             return render_template("register.html", error="Registering failed")
@@ -40,7 +41,7 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
-    return redirect("/main")
+    return redirect("/")
 
 
 @app.route("/main")

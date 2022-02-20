@@ -18,12 +18,10 @@ Lopputuloksena olisi Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
 
 ## Tilanne:
 
-* Sovelluksen pohja valmis.
-* Kirjautuminen ja rekisteröinti toimii, mutta niitä ei tarkasteta eikä niihin viitata vielä.
-* Alueet näkyvät.
-* Ketjujen luonti toimii, mutta ne eivät näy.
-* Viestit ei tehty.
+* Kirjautuminen ja rekisteröinti toimii.
+* Näkymät näkyvät oikein.
+* Ketjujen ja viestien luonti, muokkaus ja poisto toimii.
 * Haku ei tehty.
 * Ylläpitäjän merkki tietokannassa, mutta ei käytössä missään.
 
-Sovellusta voi testata https://tsoha-scarrat.herokuapp.com/ rekisteröimällä uniikin tunnuksen ja salasanan, joka kirjautuu automaattisesti sisään hyväksyttäessä. Älä paina "go back" nappia rekisteröintiruudussa :D rikkinäinen linkki.
+Sovellusta voi testata https://tsoha-scarrat.herokuapp.com/ rekisteröimällä uniikin tunnuksen ja salasanan, joka kirjautuu automaattisesti sisään hyväksyttäessä.

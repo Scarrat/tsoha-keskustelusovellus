@@ -1,3 +1,4 @@
+{% if session.username %}
 {{ topic }}
 Number of threads: {{ count }}
 <hr>
@@ -7,4 +8,6 @@ Number of threads: {{ count }}
 <a href="/messages/{{ thread.id }}">{{ thread.topic }}</a> by {{thread.creator}} at {{thread.created_at.strftime("%H:%M %d-%m-%Y")}}
 <hr>
 {% endfor %}
+<a href="/main">Back to main page</a>
 <hr> <a href="/logout">Log out</a>
+{% endif %}
