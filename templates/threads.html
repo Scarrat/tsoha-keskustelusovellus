@@ -1,8 +1,8 @@
 {{ topic }}
 <hr>
-<a href="/new">Create new thread</a>
+<a href="/new/{{ id }}">Create new thread</a>
 <hr>
 {% for thread in threads %}
-<a href="/main">{{ thread.topic }} </a> 
+<a href="/messages/{{ thread.id }}">{{ thread.topic }} </a> 
 <hr>
 {% endfor %}

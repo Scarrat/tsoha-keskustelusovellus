@@ -1,0 +1,16 @@
+{{ topic }}
+<hr>
+
+<hr>
+{% for message in messages %}
+{{ message.content }} 
+<hr>
+{% endfor %}
+Send new message
+<form action="/messent" method="POST">
+    Your message: <br>
+    <textarea name="message" rows="1" cols="40"></textarea>
+    <br>
+    <input type="submit" value="Send">
+    <input type="hidden" name="id" value="{{ id }}">
+    </form>
