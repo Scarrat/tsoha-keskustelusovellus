@@ -18,6 +18,7 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         users.register(username, password)
+        session["username"] = username
         if users.login(username,password):
             return redirect("/main")
         else:

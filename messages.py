@@ -39,6 +39,10 @@ def deletet(id):
     result = db.session.execute("SELECT cat_id FROM threads WHERE id=:id",{"id":id})
     id1 = result.fetchone()[0]
     db.session.execute("UPDATE cats SET subcats =subcats -1 where id=:id", {"id":id1})
+    result = db.session.execute("select id from messages where thread_id=:id", {"id":id1})
+    ids = result.fetchall()
+    for x in ids:
+        deletem(id)
     db.session.execute("DELETE FROM threads WHERE id=:id", { "id": id})
     db.session.commit()
     return True
