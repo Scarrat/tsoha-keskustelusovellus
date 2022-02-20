@@ -46,9 +46,9 @@ def logout():
 
 @app.route("/main")
 def main():
-    result = db.session.execute("SELECT id, topic FROM cats")
+    result = db.session.execute("SELECT id, topic, subcats, messagecount FROM cats ORDER BY id ASC")
     cats = result.fetchall()
-    return render_template("main.html", count=len(cats), cats=cats, id=id)
+    return render_template("main.html", count=len(cats), cats=cats)
 
 
 @app.route("/threads/<int:id>")

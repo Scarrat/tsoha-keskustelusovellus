@@ -5,6 +5,8 @@ Logged in as {{session.username}}
 <hr>
 {% for cat in cats %}
 <a href="/threads/{{cat.id}}">{{ cat.topic }} </a> 
+<br>Thread count : {{cat.subcats}}
+<br>Message count : {{cat.messagecount}}
 <hr>
 {% endfor %}
 <a href="/logout">Log out</a>

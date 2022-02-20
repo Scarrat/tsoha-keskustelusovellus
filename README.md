@@ -23,5 +23,6 @@ Lopputuloksena olisi Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
 * Ketjujen ja viestien luonti, muokkaus ja poisto toimii.
 * Haku ei tehty.
 * Ylläpitäjän merkki tietokannassa, mutta ei käytössä missään.
+* Viimeksi lähetetyn viestin aika ei näy.
 
 Sovellusta voi testata https://tsoha-scarrat.herokuapp.com/ rekisteröimällä uniikin tunnuksen ja salasanan, joka kirjautuu automaattisesti sisään hyväksyttäessä.
