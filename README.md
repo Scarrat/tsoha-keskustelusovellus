@@ -20,7 +20,7 @@ Lopputuloksena olisi Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
 
 * Kirjautuminen ja rekisteröinti toimii.
 * Näkymät näkyvät oikein.
-* Ketjujen ja viestien luonti, muokkaus ja poisto toimii.
+* Ketjujen ja viestien luonti, muokkaus ja poisto toimii (langan poisto jostain syystä ei toimi vielä herokussa jollei kaikkia viestejä ole poistettu.)
 * Haku ei tehty.
 * Ylläpitäjän merkki tietokannassa, mutta ei käytössä missään.
 * Viimeksi lähetetyn viestin aika ei näy.
