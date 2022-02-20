@@ -1,8 +1,11 @@
+{% if session.username %}
 Number of categories: {{ count }}
 <hr>
-Logged in 
+Logged in as {{session.username}}
 <hr>
 {% for cat in cats %}
 <a href="/threads/{{cat.id}}">{{ cat.topic }} </a> 
 <hr>
 {% endfor %}
+<a href="/logout">Log out</a>
+{% endif %}

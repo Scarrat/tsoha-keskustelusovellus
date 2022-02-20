@@ -1,0 +1,8 @@
+<form action="/editt/{{id}}" method="POST">
+    Send new message: <br>
+    <textarea name="content" rows="1" cols="40"></textarea>
+    <br>
+    <input type="submit" value="Send">
+    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="user" value="{{ session.username }}">
+    </form>

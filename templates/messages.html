@@ -1,16 +1,51 @@
-{{ topic }}
-<hr>
+{% if session.username== creator %}
+<form action="/editt" method="POST">
+    {{topic}}
+    Edit thread name:
+    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="submit" value="Edit">
+    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="type" value="threadname">
+</form>
+<form action="/delete" method="POST">
+    <input type="submit" value="Delete thread">
+    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="type" value="thread">
+</form>
+{% else %}
 
+{{topic}}
+{% endif %}
 <hr>
-{% for message in messages %}
-{{ message.content }} 
+Number of messages: {{ count }}
 <hr>
-{% endfor %}
-Send new message
 <form action="/messent" method="POST">
-    Your message: <br>
+    Send new message:
     <textarea name="message" rows="1" cols="40"></textarea>
-    <br>
     <input type="submit" value="Send">
     <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="user" value="{{ session.username }}">
     </form>
+    
+<hr>
+{% for message in messages %}
+{{ message.content }}
+<br>
+by {{ message.sender }} at {{message.sent_at.strftime("%H:%M %d-%m-%Y")}} 
+{% if session.username== message.sender %}
+<form action="/editt" method="POST">
+    Edit message:
+    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="submit" value="Edit">
+    <input type="hidden" name="id" value="{{message.id}}">
+    <input type="hidden" name="type" value="message">
+</form>
+<form action="/delete" method="POST">
+    <input type="submit" value="Delete message">
+    <input type="hidden" name="id" value="{{message.id}}">
+    <input type="hidden" name="type" value="message">
+</form>
+{% endif %}
+<hr>
+{% endfor %}
+<hr><a href="/logout">Log out</a>

@@ -1,8 +1,10 @@
 {{ topic }}
+Number of threads: {{ count }}
 <hr>
 <a href="/new/{{ id }}">Create new thread</a>
 <hr>
 {% for thread in threads %}
-<a href="/messages/{{ thread.id }}">{{ thread.topic }} </a> 
+<a href="/messages/{{ thread.id }}">{{ thread.topic }}</a> by {{thread.creator}} at {{thread.created_at.strftime("%H:%M %d-%m-%Y")}}
 <hr>
 {% endfor %}
+<hr> <a href="/logout">Log out</a>

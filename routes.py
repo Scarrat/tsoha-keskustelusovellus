@@ -30,10 +30,17 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        session["username"] = username
         if users.login(username, password):
             return redirect("/main")
         else:
             return render_template("error.html", message="Logging in failed")
+
+
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return redirect("/main")
 
 
 @app.route("/main")
@@ -49,9 +56,9 @@ def threads(id):
         "SELECT topic FROM cats WHERE id=:id", {"id": id})
     topic = result.fetchone()[0]
     result = db.session.execute(
-        "SELECT id, topic FROM threads where cat_id=:id", {"id": id})
+        "SELECT id, topic, creator, created_at FROM threads where cat_id=:id", {"id": id})
     threads = result.fetchall()
-    return render_template("threads.html", id=id, topic=topic, threads=threads)
+    return render_template("threads.html", count=len(threads), id=id, topic=topic, threads=threads)
 
 
 @app.route("/new/<int:id>", methods=["GET"])
@@ -63,27 +70,68 @@ def newthread(id):
 def new():
     topic = request.form["topic"]
     id = request.form["id"]
-    if messages.post_thread(topic, id):
+    user = request.form["user"]
+    if messages.post_thread(topic, id, user):
         return redirect("/main")
     else:
         return render_template("error.html", message="Thread creation failed")
 
 
 @app.route("/messages/<int:id>", methods=["GET"])
-def newmess(id):
+def allmessages(id):
     result = db.session.execute(
         "SELECT topic FROM threads WHERE id=:id", {"id": id})
     topic = result.fetchone()[0]
     result = db.session.execute(
-        "SELECT id, content FROM messages where thread_id=:id", {"id": id})
+        "SELECT creator FROM threads WHERE id=:id", {"id": id})
+    creator = result.fetchone()[0]
+    result = db.session.execute(
+        "SELECT id, sender, sent_at, content FROM messages WHERE thread_id=:id", {"id": id})
     messages = result.fetchall()
-    return render_template("messages.html", id=id, topic=topic, messages=messages)
+    return render_template("messages.html", count=len(messages), id=id, messages=messages, topic=topic, creator=creator)
+
 
 @app.route("/messent", methods=["POST"])
 def newmessent():
     content = request.form["message"]
     id = request.form["id"]
-    if messages.post_message(content, id):
+    user = request.form["user"]
+    if messages.post_message(content, id, user):
         return redirect("/main")
     else:
         return render_template("error.html", message="Message sending failed")
+
+
+@app.route("/editt", methods=["POST"])
+def editt():
+    content = request.form["content"]
+    type = request.form["type"]
+    if(type == "threadname"):
+        thread_id = request.form["id"]
+        if messages.editt(thread_id, content):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Editing failed")
+    if(type == "message"):
+        message_id = request.form["id"]
+        if messages.editm(message_id, content):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Editing failed")
+
+
+@app.route("/delete", methods=["POST"])
+def delete():
+    type = request.form["type"]
+    if type=="thread":
+        thread_id = request.form["id"]
+        if messages.deletet(thread_id):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Deleting failed")
+    if type=="message":
+        message_id = request.form["id"]
+        if messages.deletem(message_id):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Deleting failed")
