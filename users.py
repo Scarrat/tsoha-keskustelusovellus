@@ -26,7 +26,26 @@ def login(username, password):
         else:
             return False
 
+def make_admin(user):
+    try:
+        sql = "UPDATE users SET admin = TRUE WHERE username = :user"
+        db.session.execute(sql, {"user":user})
+        db.session.commit()
+        return True
+    except:
+        return False
+
+
 def admin_status(user):
     sql = "SELECT admin FROM users WHERE username=:user"
     return db.session.execute(sql, {"user":user}).fetchone()[0]
+
+def add_secret(id):
+    try:
+        sql = "INSERT INTO secret (user_id) VALUES (:id)"
+        db.session.execute(sql, {"id":id})
+        db.session.commit()
+    except:
+        return False
+
 

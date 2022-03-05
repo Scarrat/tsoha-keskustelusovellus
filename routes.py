@@ -18,8 +18,11 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         users.register(username, password)
-        session["username"] = username
+        if username == "admin":
+            users.make_admin(user)
         if users.login(username,password):
+            session["username"] = username
+            session["admin"] = users.admin_status(username)
             return redirect("/main")
         else:
             return render_template("error.html", error="Registering failed")
@@ -32,7 +35,6 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        
         if users.login(username, password):
             session["username"] = username
             session["admin"] = users.admin_status(username)
@@ -82,6 +84,18 @@ def new():
     else:
         return render_template("error.html", message="Thread creation failed")
 
+@app.route("/newsecret/", methods=["GET","POST"])
+def newsecretthread():
+    if request.method == "GET":
+        return render_template("newsecret.html")
+    if request.method == "POST":
+        topic = request.form["topic"]
+        user = request.form["user"]
+        if messages.post_secretthread(topic,user):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Thread creation failed")
+
 @app.route("/newcategory", methods=["GET", "POST"])
 def newcategory():
     if request.method == "GET":
@@ -103,7 +117,7 @@ def allmessages(id):
         "SELECT creator FROM threads WHERE id=:id", {"id": id})
     creator = result.fetchone()[0]
     result = db.session.execute(
-        "SELECT id, sender, sent_at, content FROM messages WHERE thread_id=:id", {"id": id})
+        "SELECT messages.id, messages.sender, messages.sent_at, messages.content, users.id FROM messages, users WHERE messages.thread_id=:id AND messages.user_id = users.id", {"id": id})
     messages = result.fetchall()
     return render_template("messages.html", count=len(messages), id=id, messages=messages, topic=topic, creator=creator)
 
@@ -113,7 +127,8 @@ def newmessent():
     content = request.form["message"]
     id = request.form["id"]
     user = request.form["user"]
-    if messages.post_message(content, id, user):
+    type = request.form["type"]
+    if messages.post_message(content, id, user,type):
         return redirect("/main")
     else:
         return render_template("error.html", message="Message sending failed")
@@ -165,6 +180,19 @@ def delete():
             return redirect("/main")
         else:
             return render_template("error.html", message="Deleting failed")
+    if type=="secretmessage":
+        message_id = request.form["id"]
+        if messages.deletesm(message_id):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Deleting failed")
+
+    if type=="secretthread":
+        message_id = request.form["id"]
+        if messages.deletest(message_id):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Deleting failed")
 
 @app.route("/search", methods=["POST"])
 def search():
@@ -172,4 +200,46 @@ def search():
     result = db.session.execute(
         "SELECT * FROM messages WHERE content ILIKE :content", {"content": "%" + content + "%"})
     messages = result.fetchall()
-    return render_template("search.html",messages=messages)
+    return render_template("search.html",messages=messages, list=list)
+
+@app.route("/user/<int:id>")
+def user(id):
+    result = db.session.execute(
+        "SELECT * FROM messages WHERE user_id =:id ", {"id":id})
+    messages = result.fetchall()
+    return render_template("user.html",messages= messages, id=id)
+
+@app.route("/secretarea")
+def secret():
+    if session["admin"]:
+        result = db.session.execute(
+        "SELECT id, topic, creator, created_at FROM secretthreads")
+        threads = result.fetchall()
+        return render_template("secretarea.html", threads=threads)
+    else:
+        return render_template("error.html", message="No access")
+
+
+@app.route("/secretmessages/<int:id>", methods=["GET"])
+def secretmessages(id):
+    result = db.session.execute(
+        "SELECT topic FROM secretthreads WHERE id=:id", {"id": id})
+    topic = result.fetchone()[0]
+    result = db.session.execute(
+        "SELECT creator FROM secretthreads WHERE id=:id", {"id": id})
+    creator = result.fetchone()[0]
+    result = db.session.execute(
+        "SELECT secretmessages.id, secretmessages.sender, secretmessages.sent_at, secretmessages.content, users.id FROM secretmessages, users WHERE secretmessages.secretthread_id=:id AND secretmessages.user_id = users.id", {"id": id})
+    messages = result.fetchall()
+    return render_template("secretmessages.html", count=len(messages), id=id, messages=messages, topic=topic, creator=creator)
+    
+
+@app.route("/addsecret", methods=["POST"])
+def addsecret():
+    id = request.form["id"]
+    user = db.session.execute("SELECT username FROM users WHERE id = :id", {"id":id}).fetchone()[0]
+    if users.make_admin(user):
+        return redirect("/main")
+    else:
+        return render_template("error.html", message="User already admin")
+

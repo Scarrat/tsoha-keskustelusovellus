@@ -12,6 +12,15 @@ def post_thread(topic, id, user):
     else:
         return False
 
+def post_secretthread(topic, user):
+    if topic:
+        db.session.execute("INSERT INTO secretthreads (topic, created_at, creator) values (:topic, NOW(), :user)", {
+                    "topic": topic, "id": id, "user": user})
+        db.session.commit()
+        return True
+    else:
+        return False
+
 def post_category(topic):
     if topic:
         db.session.execute("INSERT INTO cats (topic) values (:topic)", {
@@ -22,10 +31,16 @@ def post_category(topic):
         return False
 
 
-def post_message(content, id, user):
+def post_message(content, id, user, type):
     if content:
-        db.session.execute("INSERT INTO messages (content, sent_at, thread_id, sender) values (:content, NOW(), :id, :user)", {
-                       "content": content, "id": id, "user": user})
+        if type == "secretmessage":
+            user_id= db.session.execute("SELECT id FROM users where username =:user",{"user":user}).fetchone()[0]
+            db.session.execute("INSERT INTO secretmessages (content, sent_at, secretthread_id, sender, user_id) values (:content, NOW(), :id, :user, :user_id)", {"content": content, "id": id, "user": user, "user_id":user_id})
+            db.session.commit()
+            return True
+        user_id= db.session.execute("SELECT id FROM users where username =:user",{"user":user}).fetchone()[0]
+        db.session.execute("INSERT INTO messages (content, sent_at, thread_id, sender, user_id) values (:content, NOW(), :id, :user, :user_id)", {
+                       "content": content, "id": id, "user": user, "user_id":user_id})
         result = db.session.execute("SELECT cat_id FROM threads WHERE id=:id",{"id":id})
         theid = result.fetchone()[0]
         db.session.execute("UPDATE cats SET messagecount =messagecount +1 where id=:id", {"id":theid})
@@ -68,6 +83,16 @@ def deletem(id):
     id2 = result.fetchone()[0]
     db.session.execute("UPDATE cats SET messagecount =messagecount -1 where id=:id", {"id":id2})
     db.session.execute("DELETE FROM messages WHERE id=:id", { "id": id})
+    db.session.commit()
+    return True
+
+def deletesm(id):
+    db.session.execute("DELETE FROM secretmessages WHERE id=:id", { "id": id})
+    db.session.commit()
+    return True
+
+def deletest(id):
+    db.session.execute("DELETE FROM secretthreads WHERE id=:id", { "id": id})
     db.session.commit()
     return True
 
