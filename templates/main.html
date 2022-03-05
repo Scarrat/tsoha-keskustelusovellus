@@ -9,6 +9,14 @@ You are an admin
 <a href="/newcategory" >Create new area</a>
 <hr>
 {% endif %}
+<br>
+ <form action="/search" method="POST">
+    Search:
+    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="submit" value="Find">
+    <input type="hidden" name="type" value="search">
+
+</form>
 <hr>
 {% for cat in cats %}
 <a href="/threads/{{cat.id}}">{{ cat.topic }} </a> 

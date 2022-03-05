@@ -165,3 +165,11 @@ def delete():
             return redirect("/main")
         else:
             return render_template("error.html", message="Deleting failed")
+
+@app.route("/search", methods=["POST"])
+def search():
+    content = request.form["content"]
+    result = db.session.execute(
+        "SELECT * FROM messages WHERE content ILIKE :content", {"content": "%" + content + "%"})
+    messages = result.fetchall()
+    return render_template("search.html",messages=messages)

@@ -1,0 +1,9 @@
+{% if session.username %}
+{% for message in messages %}
+{{ message.content }}
+<br>
+by {{ message.sender }} at {{message.sent_at.strftime("%H:%M %d-%m-%Y")}} 
+<a href="/messages/{{message.thread_id}}">To thread</a>
+<hr>
+{% endfor %}
+{% endif %}
