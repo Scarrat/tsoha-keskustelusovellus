@@ -1,0 +1,10 @@
+{% if session.admin == True %}
+<form action="/newcategory" method="POST">
+    Thread name: <br>
+    <textarea name="topic" rows="1" cols="40"></textarea>
+    <br>
+    <input type="submit" value="Post">
+    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="user" value="{{ session.username }}">
+    </form>
+{% endif %}

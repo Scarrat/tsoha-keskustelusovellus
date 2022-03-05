@@ -1,12 +1,32 @@
 {% if session.username %}
+
 Number of categories: {{ count }}
 <hr>
 Logged in as {{session.username}}
+{% if session.admin == True %}
+You are an admin
+<br>
+<a href="/newcategory" >Create new area</a>
+<hr>
+{% endif %}
 <hr>
 {% for cat in cats %}
 <a href="/threads/{{cat.id}}">{{ cat.topic }} </a> 
 <br>Thread count : {{cat.subcats}}
 <br>Message count : {{cat.messagecount}}
+<br><form action="/editt" method="POST">
+    Edit area name:
+    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="submit" value="Edit">
+    <input type="hidden" name="id" value="{{ cat.id }}">
+    <input type="hidden" name="type" value="categoryname">
+
+</form>
+<form action="/delete" method="POST">
+    <input type="submit" value="Delete area">
+    <input type="hidden" name="id" value="{{ cat.id }}">
+    <input type="hidden" name="type" value="category">
+</form>
 <hr>
 {% endfor %}
 <a href="/logout">Log out</a>

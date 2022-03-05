@@ -22,7 +22,7 @@ def register():
         if users.login(username,password):
             return redirect("/main")
         else:
-            return render_template("register.html", error="Registering failed")
+            return render_template("error.html", error="Registering failed")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -32,8 +32,10 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        session["username"] = username
+        
         if users.login(username, password):
+            session["username"] = username
+            session["admin"] = users.admin_status(username)
             return redirect("/main")
         else:
             return render_template("error.html", message="Logging in failed")
@@ -42,6 +44,8 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    if session["admin"]:
+        del session["admin"]
     return redirect("/")
 
 
@@ -77,6 +81,17 @@ def new():
         return redirect("/main")
     else:
         return render_template("error.html", message="Thread creation failed")
+
+@app.route("/newcategory", methods=["GET", "POST"])
+def newcategory():
+    if request.method == "GET":
+        return render_template("newcategory.html")
+    if request.method == "POST":
+        topic = request.form["topic"]
+        if messages.post_category(topic):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Category creation failed")
 
 
 @app.route("/messages/<int:id>", methods=["GET"])
@@ -120,6 +135,13 @@ def editt():
             return redirect("/main")
         else:
             return render_template("error.html", message="Editing failed")
+    if(type == "categoryname"):
+        cat_id = request.form["id"]
+        if messages.editc(cat_id, content):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Editing failed")
+
 
 
 @app.route("/delete", methods=["POST"])
@@ -134,6 +156,12 @@ def delete():
     if type=="message":
         message_id = request.form["id"]
         if messages.deletem(message_id):
+            return redirect("/main")
+        else:
+            return render_template("error.html", message="Deleting failed")
+    if type=="category":
+        cat_id = request.form["id"]
+        if messages.deletec(cat_id):
             return redirect("/main")
         else:
             return render_template("error.html", message="Deleting failed")

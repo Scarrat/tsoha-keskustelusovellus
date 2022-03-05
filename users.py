@@ -25,3 +25,8 @@ def login(username, password):
             return True
         else:
             return False
+
+def admin_status(user):
+    sql = "SELECT admin FROM users WHERE username=:user"
+    return db.session.execute(sql, {"user":user}).fetchone()[0]
+

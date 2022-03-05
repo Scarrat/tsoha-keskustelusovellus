@@ -12,6 +12,15 @@ def post_thread(topic, id, user):
     else:
         return False
 
+def post_category(topic):
+    if topic:
+        db.session.execute("INSERT INTO cats (topic) values (:topic)", {
+                        "topic": topic})
+        db.session.commit()
+        return True
+    else:
+        return False
+
 
 def post_message(content, id, user):
     if content:
@@ -35,6 +44,11 @@ def editm(id, content):
     db.session.commit()
     return True
 
+def editc(id, content):
+    db.session.execute("UPDATE cats SET topic=:content WHERE id=:id", {"content": content, "id": id})
+    db.session.commit()
+    return True
+
 def deletet(id):
     result = db.session.execute("SELECT cat_id FROM threads WHERE id=:id",{"id":id})
     id1 = result.fetchone()[0]
@@ -54,5 +68,10 @@ def deletem(id):
     id2 = result.fetchone()[0]
     db.session.execute("UPDATE cats SET messagecount =messagecount -1 where id=:id", {"id":id2})
     db.session.execute("DELETE FROM messages WHERE id=:id", { "id": id})
+    db.session.commit()
+    return True
+
+def deletec(id):
+    db.session.execute("DELETE FROM cats WHERE id=:id" , { "id": id})
     db.session.commit()
     return True

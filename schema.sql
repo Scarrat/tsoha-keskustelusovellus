@@ -1,4 +1,4 @@
-CREATE TABLE users (id SERIAL PRIMARY KEY, username TEXT UNIQUE, password TEXT, admin BOOLEAN);
+CREATE TABLE users (id SERIAL PRIMARY KEY, username TEXT UNIQUE, password TEXT, admin BOOLEAN DEFAULT FALSE);
 CREATE TABLE cats (id SERIAL PRIMARY KEY, topic TEXT, subcats INTEGER DEFAULT 0, messagecount INTEGER DEFAULT 0);
 INSERT INTO cats (topic) VALUES ('General');
 INSERT INTO cats (topic) VALUES ('Help');
