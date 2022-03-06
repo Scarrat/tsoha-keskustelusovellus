@@ -1,3 +1,6 @@
+from queue import Empty
+from sqlite3 import IntegrityError
+from xmlrpc.client import boolean
 from db import db
 import users
 
@@ -87,7 +90,6 @@ def deletem(id):
     db.session.execute("UPDATE cats SET messagecount =messagecount -1 where id=:id", {"id":id2})
     db.session.execute("DELETE FROM messages WHERE id=:id", { "id": id})
     db.session.commit()
-    last_sent_calc()
     return True
 
 def deletesm(id):
@@ -105,17 +107,19 @@ def deletec(id):
     db.session.commit()
     return True
 
-def last_sent_area(id):
-    result = db.session.execute("SELECT id FROM threads WHERE cat_id =:id",{"id":id}).fetchall()
-    times = []
-    for x in result:
-        times.append(db.session.execute("SELECT max(sent_at) FROM messages WHERE id=:id",{"id":x[0]}).fetchone()[0])
-    return times
+# def last_sent_area(id):
+#     if id is int:
+#         result = db.session.execute("SELECT id FROM threads WHERE cat_id =:id",{"id":id}).fetchall()
+#         times = []
+#         for x in result:
+#             times.append(db.session.execute("SELECT max(sent_at) FROM messages WHERE id=:id",{"id":x[0]}).fetchone()[0])
+#         return times
 
-def last_sent_calc():
-    result = db.session.execute("SELECT id, messagecount FROM cats").fetchall()
-    for x in result:
-        if max(last_sent_area(x[0])) is not None:
-            db.session.execute("INSERT INTO cats (last_sent) VALUES (:time) where id=:id", {"time":max(last_sent_area(x[0])),"id":x[0]})
-            db.session.commit()
+# def last_sent_calc():
+#     result = db.session.execute("SELECT id, messagecount FROM cats").fetchall()
+#     for x in result:
+#         print(x[0])
+#         if len(last_sent_area(x[0])) != 0 & last_sent_area(x[0] != None):
+#             db.session.execute("INSERT INTO cats (last_sent) VALUES (:time) where id=:id", {"time":max(last_sent_area(x[0])),"id":x[0]})
+#             db.session.commit()
     

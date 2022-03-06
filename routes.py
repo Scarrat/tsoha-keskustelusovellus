@@ -1,5 +1,6 @@
+import secrets
 from app import app
-from flask import redirect, render_template, request, session
+from flask import abort, redirect, render_template, request, session
 import messages
 import users
 from db import db
@@ -19,10 +20,11 @@ def register():
         password = request.form["password"]
         users.register(username, password)
         if username == "admin":
-            users.make_admin(user)
+            users.make_admin(username)
         if users.login(username,password):
             session["username"] = username
             session["admin"] = users.admin_status(username)
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/main")
         else:
             return render_template("error.html", error="Registering failed")
@@ -38,6 +40,7 @@ def login():
         if users.login(username, password):
             session["username"] = username
             session["admin"] = users.admin_status(username)
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/main")
         else:
             return render_template("error.html", message="Logging in failed")
@@ -46,6 +49,7 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["csrf_token"]
     if session["admin"]:
         del session["admin"]
     return redirect("/")
@@ -79,6 +83,8 @@ def new():
     topic = request.form["topic"]
     id = request.form["id"]
     user = request.form["user"]
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if messages.post_thread(topic, id, user):
         return redirect("/main")
     else:
@@ -91,6 +97,8 @@ def newsecretthread():
     if request.method == "POST":
         topic = request.form["topic"]
         user = request.form["user"]
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         if messages.post_secretthread(topic,user):
             return redirect("/main")
         else:
@@ -102,6 +110,8 @@ def newcategory():
         return render_template("newcategory.html")
     if request.method == "POST":
         topic = request.form["topic"]
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         if messages.post_category(topic):
             return redirect("/main")
         else:
@@ -119,7 +129,9 @@ def allmessages(id):
     result = db.session.execute(
         "SELECT messages.id, messages.sender, messages.sent_at, messages.content, users.id FROM messages, users WHERE messages.thread_id=:id AND messages.user_id = users.id", {"id": id})
     messages = result.fetchall()
-    return render_template("messages.html", count=len(messages), id=id, messages=messages, topic=topic, creator=creator)
+    threadid = db.session.execute(
+        "SELECT cat_id FROM threads WHERE id=:id", {"id": id}).fetchone()[0]
+    return render_template("messages.html", count=len(messages), id=id, messages=messages, topic=topic, creator=creator,thread_id=threadid)
 
 
 @app.route("/messent", methods=["POST"])
@@ -128,6 +140,8 @@ def newmessent():
     id = request.form["id"]
     user = request.form["user"]
     type = request.form["type"]
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if messages.post_message(content, id, user,type):
         return redirect("/main")
     else:
@@ -138,6 +152,8 @@ def newmessent():
 def editt():
     content = request.form["content"]
     type = request.form["type"]
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if(type == "threadname"):
         thread_id = request.form["id"]
         if messages.editt(thread_id, content):
@@ -162,6 +178,8 @@ def editt():
 @app.route("/delete", methods=["POST"])
 def delete():
     type = request.form["type"]
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     if type=="thread":
         thread_id = request.form["id"]
         if messages.deletet(thread_id):
@@ -237,6 +255,8 @@ def secretmessages(id):
 @app.route("/addsecret", methods=["POST"])
 def addsecret():
     id = request.form["id"]
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
     user = db.session.execute("SELECT username FROM users WHERE id = :id", {"id":id}).fetchone()[0]
     if users.make_admin(user):
         return redirect("/main")

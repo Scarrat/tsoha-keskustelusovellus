@@ -4,6 +4,7 @@
     <input type="submit" value="Make admin">
     <input type="hidden" name="id" value="{{id}}">
     <input type="hidden" name="type" value="addsecret">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% for message in messages %}
 {{ message.content }}

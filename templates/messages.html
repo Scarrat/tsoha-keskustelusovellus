@@ -7,11 +7,13 @@
     <input type="submit" value="Edit">
     <input type="hidden" name="id" value="{{ id }}">
     <input type="hidden" name="type" value="threadname">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <form action="/delete" method="POST">
     <input type="submit" value="Delete thread">
     <input type="hidden" name="id" value="{{ id }}">
     <input type="hidden" name="type" value="thread">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% else %}
 
@@ -27,6 +29,7 @@ Number of messages: {{ count }}
     <input type="hidden" name="id" value="{{ id }}">
     <input type="hidden" name="user" value="{{ session.username }}">
     <input type="hidden" name="type" value="normal">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
     
 <hr>
@@ -41,15 +44,18 @@ by <a href="/user/{{message[4]}}">{{ message[1] }}</a> at {{message[2].strftime(
     <input type="submit" value="Edit">
     <input type="hidden" name="id" value="{{message[0]}}">
     <input type="hidden" name="type" value="message">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <form action="/delete" method="POST">
     <input type="submit" value="Delete message">
     <input type="hidden" name="id" value="{{message[0]}}">
     <input type="hidden" name="type" value="message">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% endif %}
 <hr>
 {% endfor %}
+<a href="/threads/{{thread_id}}">Back to threads</a>
 <a href="/main">Back to main page</a>
 <hr><a href="/logout">Log out</a>
 {% endif %}
