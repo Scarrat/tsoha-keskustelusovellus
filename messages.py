@@ -80,6 +80,12 @@ def editsm(id, content):
     db.session.commit()
     return True
 
+def editst(id, content):
+    db.session.execute("UPDATE secretthreads SET topic=:content WHERE id=:id", {
+                       "content": content, "id": id})
+    db.session.commit()
+    return True
+
 def editc(id, content):
     db.session.execute("UPDATE cats SET topic=:content WHERE id=:id", {
                        "content": content, "id": id})

@@ -160,8 +160,6 @@ def editt():
     if(type == "threadname"):
         thread_id = request.form["id"]
         if messages.editt(thread_id, content):
-            if secret =="yes":
-                return redirect("/secretmessages/"+thread_id)
             return redirect("/messages/"+thread_id)
         else:
             return render_template("error.html", message="Editing failed")
@@ -182,6 +180,12 @@ def editt():
         message_id = request.form["id"]
         thread_id = request.form["thread_id"]
         if messages.editsm(message_id, content):
+            return redirect("/secretmessages/"+thread_id)
+        else:
+            return render_template("error.html", message="Editing failed")
+    if(type == "secretthreadname"):
+        thread_id = request.form["id"]
+        if messages.editst(thread_id, content):
             return redirect("/secretmessages/"+thread_id)
         else:
             return render_template("error.html", message="Editing failed")
