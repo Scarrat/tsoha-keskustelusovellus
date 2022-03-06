@@ -1,8 +1,7 @@
 # tsoha-keskustelusovellus
 Tietokantasovellusprojekti
 
-
-Lopputuloksena olisi Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
+Lopputuloksena oli Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
 
 ## Ominaisuudet:
 
@@ -14,15 +13,12 @@ Lopputuloksena olisi Keskustelusovellus-esimerkkiaiheen mukainen sovellus.
 * Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 * Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 * Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
-* +mahdollisesti lisään jotain mutta alkuun kuitenkin nämä.
 
 ## Tilanne:
+Sovellus valmis arvioitavaksi
 
-* Kirjautuminen ja rekisteröinti toimii.
-* Näkymät näkyvät oikein.
-* Ketjujen ja viestien luonti, muokkaus ja poisto toimii.
-* Haku ei tehty.
-* Ylläpitäjän merkki tietokannassa, mutta ei käytössä missään.
-* Viimeksi lähetetyn viestin aika ei näy.
+## Ohjeet:
+Rekisteröidy uudella tunnuksella tai käytä tunnuksena ja salasanana "admin" ylläpitäjää varten.
+Ylläpitäjän oikeudet voi antaa muille tunnuksille napilla profiilin kautta klikkaamalla viesteissä tunnuksen nimeä.
 
 Sovellusta voi testata https://tsoha-scarrat.herokuapp.com/ rekisteröimällä uniikin tunnuksen ja salasanan, joka kirjautuu automaattisesti sisään hyväksyttäessä.
