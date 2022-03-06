@@ -23,6 +23,10 @@ You are an admin
 <a href="/threads/{{cat.id}}">{{ cat.topic }} </a> 
 <br>Thread count : {{cat.subcats}}
 <br>Message count : {{cat.messagecount}}
+<br>
+{% if cat.last_sent %}
+Last message sent : {{cat.last_sent.strftime("%H:%M %d-%m-%Y")}}
+{% endif %}
 <br><form action="/editt" method="POST">
     Edit area name:
     <textarea name="content" rows="1" cols="40"></textarea>

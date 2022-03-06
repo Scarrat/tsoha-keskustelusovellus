@@ -41,6 +41,9 @@ def post_message(content, id, user, type):
         user_id= db.session.execute("SELECT id FROM users where username =:user",{"user":user}).fetchone()[0]
         db.session.execute("INSERT INTO messages (content, sent_at, thread_id, sender, user_id) values (:content, NOW(), :id, :user, :user_id)", {
                        "content": content, "id": id, "user": user, "user_id":user_id})
+        db.session.execute("UPDATE threads SET last_sent =( NOW()) where id =:id",{"id":id}) 
+        catid = db.session.execute("SELECT cat_id FROM threads where id=:id",{"id":id}).fetchone()[0]
+        db.session.execute("UPDATE cats SET last_sent=NOW() where id =:id",{"id":catid}) 
         result = db.session.execute("SELECT cat_id FROM threads WHERE id=:id",{"id":id})
         theid = result.fetchone()[0]
         db.session.execute("UPDATE cats SET messagecount =messagecount +1 where id=:id", {"id":theid})
@@ -68,10 +71,10 @@ def deletet(id):
     result = db.session.execute("SELECT cat_id FROM threads WHERE id=:id",{"id":id})
     id1 = result.fetchone()[0]
     db.session.execute("UPDATE cats SET subcats =subcats -1 where id=:id", {"id":id1})
-    result = db.session.execute("select id from messages where thread_id=:id", {"id":id1})
+    result = db.session.execute("select id from messages where thread_id=:id", {"id":id})
     ids = result.fetchall()
     for x in ids:
-        deletem(id)
+        deletem(x[0])
     db.session.execute("DELETE FROM threads WHERE id=:id", { "id": id})
     db.session.commit()
     return True
@@ -84,6 +87,7 @@ def deletem(id):
     db.session.execute("UPDATE cats SET messagecount =messagecount -1 where id=:id", {"id":id2})
     db.session.execute("DELETE FROM messages WHERE id=:id", { "id": id})
     db.session.commit()
+    last_sent_calc()
     return True
 
 def deletesm(id):
@@ -100,3 +104,18 @@ def deletec(id):
     db.session.execute("DELETE FROM cats WHERE id=:id" , { "id": id})
     db.session.commit()
     return True
+
+def last_sent_area(id):
+    result = db.session.execute("SELECT id FROM threads WHERE cat_id =:id",{"id":id}).fetchall()
+    times = []
+    for x in result:
+        times.append(db.session.execute("SELECT max(sent_at) FROM messages WHERE id=:id",{"id":x[0]}).fetchone()[0])
+    return times
+
+def last_sent_calc():
+    result = db.session.execute("SELECT id, messagecount FROM cats").fetchall()
+    for x in result:
+        if max(last_sent_area(x[0])) is not None:
+            db.session.execute("INSERT INTO cats (last_sent) VALUES (:time) where id=:id", {"time":max(last_sent_area(x[0])),"id":x[0]})
+            db.session.commit()
+    
