@@ -21,4 +21,4 @@ Sovellus valmis arvioitavaksi
 Rekisteröidy uudella tunnuksella tai käytä tunnuksena ja salasanana "admin" ylläpitäjää varten.
 Ylläpitäjän oikeudet voi antaa muille tunnuksille napilla profiilin kautta klikkaamalla viesteissä tunnuksen nimeä.
 
-Sovellusta voi testata https://tsoha-scarrat.herokuapp.com/ rekisteröimällä uniikin tunnuksen ja salasanan, joka kirjautuu automaattisesti sisään hyväksyttäessä.
+Sovellusta voi testata https://tsoha-scarrat.herokuapp.com/ 
