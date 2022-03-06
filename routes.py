@@ -87,7 +87,7 @@ def new():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
     if messages.post_thread(topic, id, user):
-        return redirect("/main")
+        return redirect("/threads/"+id)
     else:
         return render_template("error.html", message="Thread creation failed")
 
@@ -102,7 +102,7 @@ def newsecretthread():
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
         if messages.post_secretthread(topic, user):
-            return redirect("/main")
+            return redirect("/secretarea")
         else:
             return render_template("error.html", message="Thread creation failed")
 
@@ -146,6 +146,8 @@ def newmessent():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
     if messages.post_message(content, id, user, type):
+        if type=="secretmessage":
+            return redirect("/secretmessages/" + id)
         return redirect("/messages/" + id)
     else:
         return render_template("error.html", message="Message sending failed")
@@ -160,6 +162,8 @@ def editt():
     if(type == "threadname"):
         thread_id = request.form["id"]
         if messages.editt(thread_id, content):
+            if secret =="yes":
+                return redirect("/secretmessages/"+thread_id)
             return redirect("/messages/"+thread_id)
         else:
             return render_template("error.html", message="Editing failed")
@@ -176,6 +180,13 @@ def editt():
             return redirect("/main")
         else:
             return render_template("error.html", message="Editing failed")
+    if(type == "secretmessage"):
+        message_id = request.form["id"]
+        thread_id = request.form["thread_id"]
+        if messages.editsm(message_id, content):
+            return redirect("/secretmessages/"+thread_id)
+        else:
+            return render_template("error.html", message="Editing failed")
 
 
 @app.route("/delete", methods=["POST"])
@@ -185,7 +196,6 @@ def delete():
         abort(403)
     if type == "thread":
         thread_id = request.form["id"]
-
         if messages.deletet(thread_id):
             return redirect("/main")
         else:
@@ -194,7 +204,9 @@ def delete():
         message_id = request.form["id"]
         thread_id = request.form["thread_id"]
         if messages.deletem(message_id):
-            return redirect("/messages"+thread_id)
+            if secret=="yes":
+                return redirect("/secretmessages/"+thread_id)
+            return redirect("/messages/"+thread_id)
         else:
             return render_template("error.html", message="Deleting failed")
     if type == "category":
@@ -256,7 +268,7 @@ def secretmessages(id):
         "SELECT creator FROM secretthreads WHERE id=:id", {"id": id})
     creator = result.fetchone()[0]
     result = db.session.execute(
-        "SELECT secretmessages.id, secretmessages.sender, secretmessages.sent_at, secretmessages.content, users.id FROM secretmessages, users WHERE secretmessages.secretthread_id=:id AND secretmessages.user_id = users.id", {"id": id})
+        "SELECT secretmessages.id, secretmessages.sender, secretmessages.sent_at, secretmessages.content, users.id FROM secretmessages, users WHERE secretmessages.secretthread_id=:id AND secretmessages.user_id = users.id ORDER BY secretmessages.id ASC", {"id": id})
     messages = result.fetchall()
     return render_template("secretmessages.html", count=len(messages), id=id, messages=messages, topic=topic, creator=creator)
 
