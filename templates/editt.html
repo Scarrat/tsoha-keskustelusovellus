@@ -1,6 +1,6 @@
 <form action="/editt/{{id}}" method="POST">
     Send new message: <br>
-    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="text" name="content" required="required">
     <br>
     <input type="submit" value="Send">
     <input type="hidden" name="id" value="{{ id }}">

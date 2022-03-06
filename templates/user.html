@@ -1,3 +1,5 @@
+{% extends "layout.html" %}
+{% block content %}
 {% if session.username %}
 {% if session.admin %}
 <form action="/addsecret" method="POST">
@@ -6,12 +8,14 @@
     <input type="hidden" name="type" value="addsecret">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
+{% endif %}
 {% for message in messages %}
-{{ message.content }}
+<b style="font-size:15px">{{ message.content }}</b>
 <br>
 by {{ message.sender }} at {{message.sent_at.strftime("%H:%M %d-%m-%Y")}} 
 <a href="/messages/{{message.thread_id}}">To thread</a>
 <hr>
 {% endfor %}
 {% endif %}
-{% endif %}
+
+{% endblock %}

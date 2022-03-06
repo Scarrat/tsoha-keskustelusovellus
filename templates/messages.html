@@ -1,30 +1,44 @@
-{% if session.username %}
-{% if session.username== creator %}
-<form action="/editt" method="POST">
-    {{topic}}
-    Edit thread name:
-    <textarea name="content" rows="1" cols="40"></textarea>
-    <input type="submit" value="Edit">
-    <input type="hidden" name="id" value="{{ id }}">
-    <input type="hidden" name="type" value="threadname">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-</form>
-<form action="/delete" method="POST">
-    <input type="submit" value="Delete thread">
-    <input type="hidden" name="id" value="{{ id }}">
-    <input type="hidden" name="type" value="thread">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-</form>
-{% else %}
+{% extends "layout.html" %}
 
-{{topic}}
+
+{% block nav %}
+<li><a href="/threads/{{thread_id}}">Threads</a></li> 
+{% endblock %}
+{% block content %}
+{% if session.username %}
+{% if session.username== creator%}
+<nav>
+   <li> <form action="/editt" method="POST">
+    <h2>{{topic}}</h2>
+        Edit thread name:
+        <textarea name="content" rows="1" cols="40"></textarea>
+        <input type="submit" value="Edit">
+        <input type="hidden" name="id" value="{{ id }}">
+        <input type="hidden" name="type" value="threadname">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    </form>
+</li>
+
+<li>   <form action="/delete" method="POST">
+        <input type="submit" value="Delete thread">
+        <input type="hidden" name="id" value="{{ id }}">
+        <input type="hidden" name="type" value="thread">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    </form>
+</li> 
+</nav>
+
+{% else %}
+<h2>{{topic}}</h2>
 {% endif %}
+
+
 <hr>
 Number of messages: {{ count }}
 <hr>
 <form action="/messent" method="POST">
     Send new message:
-    <textarea name="message" rows="1" cols="40"></textarea>
+    <input type="text" name="message" required="required">
     <input type="submit" value="Send">
     <input type="hidden" name="id" value="{{ id }}">
     <input type="hidden" name="user" value="{{ session.username }}">
@@ -34,28 +48,36 @@ Number of messages: {{ count }}
     
 <hr>
 {% for message in messages %}
-{{ message[3] }}
+<b style="font-size:15px">{{ message[3] }}</b>
 <br>
 by <a href="/user/{{message[4]}}">{{ message[1] }}</a> at {{message[2].strftime("%H:%M %d-%m-%Y")}} 
-{% if session.username== message[1] %}
+{% if session.username== message[1]%}
+<nav>
+    <li>
 <form action="/editt" method="POST">
     Edit message:
-    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="text" name="content" required="required">
     <input type="submit" value="Edit">
     <input type="hidden" name="id" value="{{message[0]}}">
+    <input type="hidden" name="thread_id" value="{{thread_id}}">
     <input type="hidden" name="type" value="message">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
+</li>
+<li>
 <form action="/delete" method="POST">
     <input type="submit" value="Delete message">
     <input type="hidden" name="id" value="{{message[0]}}">
+    <input type="hidden" name="thread_id" value="{{thread_id}}">
     <input type="hidden" name="type" value="message">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-</form>
+</form></li>
+</nav>
 {% endif %}
 <hr>
+
 {% endfor %}
-<a href="/threads/{{thread_id}}">Back to threads</a>
-<a href="/main">Back to main page</a>
-<hr><a href="/logout">Log out</a>
+
 {% endif %}
+
+{% endblock %}

@@ -1,7 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
 {% if session.admin %}
 <form action="/newcategory" method="POST">
-    Thread name: <br>
-    <textarea name="topic" rows="1" cols="40"></textarea>
+    Area name: <br>
+    <input type="text" name="topic" required="required">
     <br>
     <input type="submit" value="Post">
     <input type="hidden" name="id" value="{{ id }}">
@@ -9,3 +11,4 @@
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
 {% endif %}
+{% endblock %}

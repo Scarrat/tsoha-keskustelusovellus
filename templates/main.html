@@ -1,49 +1,71 @@
+{% extends "layout.html" %}
+
+
+{% block nav %}
+{% endblock %}
+
+
+
+{% block content %}
+<h2>Main page</h2>
 {% if session.username %}
 
-Number of categories: {{ count }}
+Number of areas: {{ count }}
 <hr>
 Logged in as {{session.username}}
-{% if session.admin == True %}
-<br>
-You are an admin
-<br>
-<a href="/newcategory" >Create new area</a>
-<hr>
-<a href="/secretarea" >Secret area</a>
-{% endif %}
-<br>
- <form action="/search" method="POST">
+<form action="/search" method="POST">
     Search:
-    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="text" name="content" required="required">
     <input type="submit" value="Find">
     <input type="hidden" name="type" value="search">
 
 </form>
 <hr>
+{% if session.admin == True %}
+You are an admin
+
+
+
+<br>
+<a href="/newcategory" >Create new area</a>
+<br>
+<br>
+<a href="/secretarea" >Admin area</a>
+{% endif %}
+
+<hr>
 {% for cat in cats %}
-<a href="/threads/{{cat.id}}">{{ cat.topic }} </a> 
-<br>Thread count : {{cat.subcats}}
-<br>Message count : {{cat.messagecount}}
+<a href="/threads/{{cat[0]}}" style="font-size:20px">{{ cat[1] }} </a>
+<br>Thread count : {{cat[3]}}
+<br>Message count : {{cat[4]}}
 <br>
 {% if cat.last_sent %}
-Last message sent : {{cat.last_sent.strftime("%H:%M %d-%m-%Y")}}
+Last message sent : {{cat[2].strftime("%H:%M %d-%m-%Y")}}
 {% endif %}
-<br><form action="/editt" method="POST">
+{% if session.admin == True %}
+<nav>
+<br><li><form action="/editt" method="POST">
     Edit area name:
-    <textarea name="content" rows="1" cols="40"></textarea>
+    <input type="text" name="content" required="required">
     <input type="submit" value="Edit">
     <input type="hidden" name="id" value="{{ cat.id }}">
     <input type="hidden" name="type" value="categoryname">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
 </form>
+</li>
+<li>
 <form action="/delete" method="POST">
     <input type="submit" value="Delete area">
     <input type="hidden" name="id" value="{{ cat.id }}">
     <input type="hidden" name="type" value="category">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
+</li>
+</nav>
+{% endif %}
 <hr>
 {% endfor %}
-<a href="/logout">Log out</a>
+
 {% endif %}
+{% endblock %}

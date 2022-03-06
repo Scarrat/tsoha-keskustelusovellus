@@ -1,14 +1,18 @@
+
+{% extends "layout.html" %}
+{% block content %}
 {% if session.username %}
-{{ topic }}
+<h2>{{ topic }}</h2>
 <br>
+<a href="/new/{{ id }}">Create new thread</a>
+
+<hr>
 Number of threads: {{ count }}
 <hr>
-<a href="/new/{{ id }}">Create new thread</a>
-<hr>
 {% for thread in threads %}
-<a href="/messages/{{ thread.id }}">{{ thread.topic }}</a> by {{thread.creator}} at {{thread.created_at.strftime("%H:%M %d-%m-%Y")}}
+<a href="/messages/{{ thread.id }}" style="font-size:20px">{{ thread[1] }}</a> by {{thread[2]}} at {{thread[3].strftime("%H:%M %d-%m-%Y")}}
+<br> Messages : {{thread[4]}}
 <hr>
 {% endfor %}
-<a href="/main">Back to main page</a>
-<hr> <a href="/logout">Log out</a>
 {% endif %}
+{% endblock %}

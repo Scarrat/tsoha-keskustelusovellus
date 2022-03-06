@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<body>
+    <title>Forum</title>
+<h1>Forum</h1>
+
+<nav>
+    <li><a href="/logout">Log out</a></li> 
+    <li><a href="/main">Main page</a></li> 
+    {% block nav %}
+    {% endblock %}
+   
+</nav>
+{% block content %}{% endblock %}
+</body>
+<style>
+nav li {
+    display: inline-block;
+    padding: 0 .5em;
+}
+body {
+    margin: auto;
+    max-width: 60em;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+</style>
+
