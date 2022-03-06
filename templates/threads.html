@@ -1,4 +1,3 @@
-
 {% extends "layout.html" %}
 {% block content %}
 {% if session.username %}
@@ -10,7 +9,8 @@
 Number of threads: {{ count }}
 <hr>
 {% for thread in threads %}
-<a href="/messages/{{ thread.id }}" style="font-size:20px">{{ thread[1] }}</a> by {{thread[2]}} at {{thread[3].strftime("%H:%M %d-%m-%Y")}}
+<a href="/messages/{{ thread.id }}" style="font-size:20px">{{ thread[1] }}</a> by {{thread[2]}} at
+{{thread[3].strftime("%H:%M %d-%m-%Y")}}
 <br> Messages : {{thread[4]}}
 <hr>
 {% endfor %}

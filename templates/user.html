@@ -12,7 +12,7 @@
 {% for message in messages %}
 <b style="font-size:15px">{{ message.content }}</b>
 <br>
-by {{ message.sender }} at {{message.sent_at.strftime("%H:%M %d-%m-%Y")}} 
+by {{ message.sender }} at {{message.sent_at.strftime("%H:%M %d-%m-%Y")}}
 <a href="/messages/{{message.thread_id}}">To thread</a>
 <hr>
 {% endfor %}

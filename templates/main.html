@@ -27,10 +27,10 @@ You are an admin
 
 
 <br>
-<a href="/newcategory" >Create new area</a>
+<a href="/newcategory">Create new area</a>
 <br>
 <br>
-<a href="/secretarea" >Admin area</a>
+<a href="/secretarea">Admin area</a>
 {% endif %}
 
 <hr>
@@ -44,24 +44,26 @@ Last message sent : {{cat[2].strftime("%H:%M %d-%m-%Y")}}
 {% endif %}
 {% if session.admin == True %}
 <nav>
-<br><li><form action="/editt" method="POST">
-    Edit area name:
-    <input type="text" name="content" required="required">
-    <input type="submit" value="Edit">
-    <input type="hidden" name="id" value="{{ cat.id }}">
-    <input type="hidden" name="type" value="categoryname">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <br>
+    <li>
+        <form action="/editt" method="POST">
+            Edit area name:
+            <input type="text" name="content" required="required">
+            <input type="submit" value="Edit">
+            <input type="hidden" name="id" value="{{ cat.id }}">
+            <input type="hidden" name="type" value="categoryname">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
-</form>
-</li>
-<li>
-<form action="/delete" method="POST">
-    <input type="submit" value="Delete area">
-    <input type="hidden" name="id" value="{{ cat.id }}">
-    <input type="hidden" name="type" value="category">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-</form>
-</li>
+        </form>
+    </li>
+    <li>
+        <form action="/delete" method="POST">
+            <input type="submit" value="Delete area">
+            <input type="hidden" name="id" value="{{ cat.id }}">
+            <input type="hidden" name="type" value="category">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+    </li>
 </nav>
 {% endif %}
 <hr>

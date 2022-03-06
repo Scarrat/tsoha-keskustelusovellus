@@ -185,7 +185,7 @@ def delete():
         abort(403)
     if type == "thread":
         thread_id = request.form["id"]
-        
+
         if messages.deletet(thread_id):
             return redirect("/main")
         else:
