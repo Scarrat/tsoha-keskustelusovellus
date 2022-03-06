@@ -18,14 +18,12 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        users.register(username, password)
+        if users.register(username, password):
+            if username == "admin":
+                users.make_admin(username)
+            return redirect("/")
         if username == "admin":
             users.make_admin(username)
-        if users.login(username, password):
-            session["username"] = username
-            session["admin"] = users.admin_status(username)
-            session["csrf_token"] = secrets.token_hex(16)
-            return redirect("/main")
         else:
             return render_template("error.html", error="Registering failed")
 

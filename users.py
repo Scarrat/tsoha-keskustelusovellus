@@ -10,9 +10,12 @@ def register(username, password):
         sql = "INSERT INTO users (username,password) VALUES (:username,:password)"
         db.session.execute(sql, {"username": username, "password": hash_value})
         db.session.commit()
+        return True
     except:
         return False
-    return login(username, password)
+    
+
+   
 
 
 def login(username, password):
@@ -23,7 +26,6 @@ def login(username, password):
         return False
     else:
         if check_password_hash(user.password, password):
-            session["user_id"] = user.id
             return True
         else:
             return False
